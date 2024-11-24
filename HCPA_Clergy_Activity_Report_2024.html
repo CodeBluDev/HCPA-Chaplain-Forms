@@ -174,27 +174,58 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
   
   document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("DOMContentLoaded", function () {
-      const iframe = document.getElementById("customFieldFrame_10");
+      const totalCallOutsField = document.getElementById("input_27");
+      const totalRideAlongsField = document.getElementById("input_28");
+      const totalOtherEventsField = document.getElementById("input_29");
+      const totalTimeField = document.getElementById("input_32");
   
-      if (!iframe) {
-          console.error("Iframe not found");
-          return;
-      }
+      // Button to trigger the calculation
+      const calculateButton = document.getElementById("calculateButton");
   
-      const resizeObserver = new ResizeObserver((entries) => {
-          for (let entry of entries) {
-              console.log("Iframe resized:", entry.contentRect);
-              // Add logic to infer changes from size changes
-              handleIframeResize();
+      // Add click event listener to the button
+      calculateButton.addEventListener("click", function () {
+          try {
+              // Access the widget's iframe
+              const iframe = document.getElementById("customFieldFrame_10");
+              if (!iframe) {
+                  console.error("Widget iframe not found");
+                  return;
+              }
+  
+              const iframeDocument = iframe.contentDocument || iframe.contentWindow.document;
+  
+              // Example: Parse hours from rows inside the widget
+              const rows = iframeDocument.querySelectorAll(".configurable-list-row"); // Replace with actual selector
+              let totalCallOuts = 0;
+              let totalRideAlongs = 0;
+              let totalOtherEvents = 0;
+  
+              rows.forEach((row) => {
+                  // Example: Extract hours from each row (adjust selectors)
+                  const type = row.querySelector('.type-selector')?.value; // Replace with actual selector
+                  const hours = parseFloat(row.querySelector('.hours-input')?.value || 0); // Replace with actual selector
+  
+                  if (type === 'Call Outs') totalCallOuts += hours;
+                  if (type === 'Ride Alongs') totalRideAlongs += hours;
+                  if (type === 'Other Events') totalOtherEvents += hours;
+              });
+  
+              // Update the parent form fields
+              totalCallOutsField.value = totalCallOuts.toFixed(2);
+              totalRideAlongsField.value = totalRideAlongs.toFixed(2);
+              totalOtherEventsField.value = totalOtherEvents.toFixed(2);
+  
+              // Calculate and update the total time
+              const totalTime = totalCallOuts + totalRideAlongs + totalOtherEvents;
+              totalTimeField.value = totalTime.toFixed(2);
+  
+              // Log results for debugging
+              console.log(`Call Outs: ${totalCallOuts}, Ride Alongs: ${totalRideAlongs}, Other Events: ${totalOtherEvents}`);
+              console.log(`Total Time Updated: ${totalTime}`);
+          } catch (e) {
+              console.error("Error calculating hours:", e);
           }
       });
-  
-      resizeObserver.observe(iframe);
-  
-      function handleIframeResize() {
-          console.log("Handling iframe resize...");
-          // Add your logic to handle content changes inferred from resize
-      }
   });
   
 
@@ -265,6 +296,8 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
           </div>
         </div>
       </li>
+      <button id="calculateButton" type="button">Calculate Hours</button>
+
       <li class="form-line form-line-column form-col-1" data-type="control_widget" id="id_10"><label class="form-label form-label-top" id="label_10" for="input_10" aria-hidden="false"> Call Outs </label>
         <div id="cid_10" class="form-input-wide" data-layout="full">
           <div data-widget-name="Configurable List" style="width:100%;text-align:Left;overflow-x:auto" data-component="widget-field"><iframe data-client-id="533946093c1ad0c45d000070" title="Configurable List" frameBorder="0" scrolling="no" allowtransparency="true" allow="geolocation; microphone; camera; autoplay; encrypted-media; fullscreen" data-type="iframe" class="custom-field-frame" id="customFieldFrame_10" src="" style="max-width:px;border:none;width:100%;height:150px" data-width="" data-height="150"></iframe>
