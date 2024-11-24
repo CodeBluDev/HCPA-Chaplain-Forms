@@ -168,49 +168,16 @@
    setTimeout(function() {
 JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Clergy Activity Report 2024","type":"control_head"},{"name":"submit2","qid":"2","text":"Submit","type":"control_button"},null,{"description":"","name":"email","qid":"4","subLabel":"","text":"Email","type":"control_email"},{"description":"","name":"name","qid":"5","subLabel":"","text":"Name","type":"control_dropdown"},null,{"description":"","name":"month","qid":"7","subLabel":"","text":"Month","type":"control_dropdown"},null,null,{"name":"typeA","qid":"10","text":"Call Outs","type":"control_widget"},{"name":"callOuts","qid":"11","text":"Call Outs","type":"control_head"},{"name":"rideAlong","qid":"12","text":"Ride Along","type":"control_head"},{"name":"rideAlong13","qid":"13","text":"Ride Along","type":"control_widget"},{"name":"timeSpent","qid":"14","text":"Time Spent Other Police Activity","type":"control_head"},null,{"name":"otherEvents","qid":"16","text":"Other Events","type":"control_widget"},{"description":"","name":"didYou","qid":"17","text":"Did you attend this months training","type":"control_radio"},{"description":"","name":"didYou18","qid":"18","text":"Did you attend this months HCPA Social","type":"control_radio"},null,null,null,null,null,null,null,null,{"description":"","name":"totalHours","qid":"27","subLabel":"","text":"Total Hours - Call Outs","type":"control_number"},{"description":"","name":"totalHours28","qid":"28","subLabel":"","text":"Total Hours - Ride Alongs","type":"control_number"},{"description":"","name":"totalHours29","qid":"29","subLabel":"","text":"Total Hours - Other Police Activity","type":"control_number"},{"name":"divider","qid":"30","text":"Divider","type":"control_divider"},null,{"description":"","name":"totalTime","qid":"32","subLabel":"","text":"Total Time Spent","type":"control_calculation"}]);}, 20); 
 </script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const callOutsFrame = document.getElementById("customFieldFrame_10");
-    const rideAlongFrame = document.getElementById("customFieldFrame_13");
-    const otherEventsFrame = document.getElementById("customFieldFrame_16");
 
-    const callOutsTotal = document.getElementById("input_27");
-    const rideAlongTotal = document.getElementById("input_28");
-    const otherEventsTotal = document.getElementById("input_29");
 
-    // Function to calculate totals
-    function calculateTotals(frame, totalField) {
-      try {
-        const iframeDocument = frame.contentDocument || frame.contentWindow.document;
-        const rows = iframeDocument.querySelectorAll(".configurable-list-row");
-        let totalHours = 0;
-
-        rows.forEach(row => {
-          const hoursInput = row.querySelector('input[type="number"]');
-          const hoursValue = parseFloat(hoursInput?.value) || 0;
-          totalHours += hoursValue;
-        });
-
-        totalField.value = totalHours.toFixed(2);
-      } catch (error) {
-        console.error("Error calculating totals:", error);
-      }
-    }
-
-    // Add event listeners for row changes
-    function addRowListeners(frame, totalField) {
-      frame.onload = function () {
-        const iframeDocument = frame.contentDocument || frame.contentWindow.document;
-        iframeDocument.addEventListener("input", () => calculateTotals(frame, totalField));
-        iframeDocument.addEventListener("change", () => calculateTotals(frame, totalField));
-      };
-    }
-
-    addRowListeners(callOutsFrame, callOutsTotal);
-    addRowListeners(rideAlongFrame, rideAlongTotal);
-    addRowListeners(otherEventsFrame, otherEventsTotal);
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Form has loaded');
+    // Your additional JavaScript code here
   });
 </script>
+
+
 
 
 </head>
