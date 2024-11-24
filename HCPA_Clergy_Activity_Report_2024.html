@@ -173,38 +173,30 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
 <script type="text/javascript">
   
   document.addEventListener("DOMContentLoaded", function () {
-    const iframe = document.getElementById("customFieldFrame_10"); // Adjust ID to match your iframe ID
-
-    if (!iframe) {
-        console.error("Iframe not found");
-        return;
-    }
-
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            console.log("Mutation detected in iframe:", mutation);
-
-            // Example: Trigger your logic to scrape data or update totals
-            calculateWidgetTotals();
-        });
-    });
-
-    // Observe the iframe for size or structure changes
-    observer.observe(iframe, {
-        attributes: true,
-        attributeFilter: ["src", "height", "width"],
-        childList: true,
-        subtree: true,
-    });
-
-    console.log("Started observing iframe for changes");
-});
-
-function calculateWidgetTotals() {
-    console.log("Triggered total calculation (you can extend this logic)");
-    // Add your logic to infer totals or scrape the widget's content indirectly
-}
-
+    document.addEventListener("DOMContentLoaded", function () {
+      const iframe = document.getElementById("customFieldFrame_10");
+  
+      if (!iframe) {
+          console.error("Iframe not found");
+          return;
+      }
+  
+      const resizeObserver = new ResizeObserver((entries) => {
+          for (let entry of entries) {
+              console.log("Iframe resized:", entry.contentRect);
+              // Add logic to infer changes from size changes
+              handleIframeResize();
+          }
+      });
+  
+      resizeObserver.observe(iframe);
+  
+      function handleIframeResize() {
+          console.log("Handling iframe resize...");
+          // Add your logic to handle content changes inferred from resize
+      }
+  });
+  
 
 </script>
 
