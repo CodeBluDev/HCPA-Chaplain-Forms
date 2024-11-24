@@ -171,70 +171,35 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
 
 
 <script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
     console.log('Form has loaded');
-    
-    function addRow() {
-      const tbody = document.getElementById("configurableListBody");
-    
-      // Create a new row
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td><input type="date" class="dateInput" required></td>
-        <td>
-          <select class="typeInput" required>
-            <option value="Officer Involved Shooting">Officer Involved Shooting</option>
-            <option value="Injury to Officer">Injury to Officer</option>
-            <option value="Death Notification">Death Notification</option>
-            <option value="Fatal Motor Vehicle Accident">Fatal Motor Vehicle Accident</option>
-            <option value="Suicide">Suicide</option>
-            <option value="Homicide">Homicide</option>
-            <option value="Drowning">Drowning</option>
-            <option value="Unknown Death">Unknown Death</option>
-            <option value="In Custody Death">In Custody Death</option>
-            <option value="Other">Other</option>
-          </select>
-        </td>
-        <td>
-          <select class="departmentInput" required>
-            <option value="Amberley Village Police Department">Amberley Village Police Department</option>
-            <option value="Blue Ash Police Department">Blue Ash Police Department</option>
-            <!-- Add other departments as needed -->
-          </select>
-        </td>
-        <td><input type="number" class="hoursInput" min="0" step="0.5" required></td>
-        <td><input type="text" class="notesInput"></td>
-        <td><button type="button" onclick="removeRow(this)">Remove</button></td>
-      `;
-      tbody.appendChild(row);
-    
-      syncHiddenField(); // Sync data after adding a row
-    }
-    
-    function removeRow(button) {
-      const row = button.closest("tr");
-      row.remove();
-      syncHiddenField(); // Sync data after removing a row
-    }
-    
-    function syncHiddenField() {
-      const tbody = document.getElementById("configurableListBody");
-      const rows = tbody.querySelectorAll("tr");
-    
-      // Collect data from each row
-      const data = Array.from(rows).map(row => ({
-        date: row.querySelector(".dateInput").value,
-        type: row.querySelector(".typeInput").value,
-        department: row.querySelector(".departmentInput").value,
-        hours: row.querySelector(".hoursInput").value,
-        notes: row.querySelector(".notesInput").value,
-      }));
-    
-      // Update the hidden JotForm field
-      const hiddenField = document.getElementById("input_10");
-      hiddenField.value = JSON.stringify(data);
-    }
+    // Your additional JavaScript code here
     
 
+      const totalCallOutsField = document.getElementById("input_27");
+      const totalRideAlongsField = document.getElementById("input_28");
+      const totalOtherEventsField = document.getElementById("input_29");
+      const totalTimeField = document.getElementById("input_32");
+  
+      // Function to calculate the overall total
+      function updateTotalTime() {
+          const totalCallOuts = parseFloat(totalCallOutsField.value) || 0;
+          const totalRideAlongs = parseFloat(totalRideAlongsField.value) || 0;
+          const totalOtherEvents = parseFloat(totalOtherEventsField.value) || 0;
+  
+          const totalTime = totalCallOuts + totalRideAlongs + totalOtherEvents;
+          totalTimeField.value = totalTime.toFixed(2);
+      }
+  
+      // Observe changes to the fields
+      const observer = new MutationObserver(updateTotalTime);
+  
+      observer.observe(totalCallOutsField, { attributes: true, childList: true, subtree: true });
+      observer.observe(totalRideAlongsField, { attributes: true, childList: true, subtree: true });
+      observer.observe(totalOtherEventsField, { attributes: true, childList: true, subtree: true });
+
+  
+  });
 </script>
 
 
@@ -302,27 +267,6 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
           </div>
         </div>
       </li>
-      <div id="customConfigurableList">
-        <h2>Custom Call Outs</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Type</th>
-              <th>Department</th>
-              <th>Hours</th>
-              <th>Notes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="configurableListBody"></tbody>
-        </table>
-        <button type="button" onclick="addRow()">+ Add Row</button>
-      </div>
-      
-      <!-- JotForm Hidden Field -->
-      <input id="input_10" type="hidden" name="q10_typeA" value="">
-      
       <li class="form-line form-line-column form-col-1" data-type="control_widget" id="id_10"><label class="form-label form-label-top" id="label_10" for="input_10" aria-hidden="false"> Call Outs </label>
         <div id="cid_10" class="form-input-wide" data-layout="full">
           <div data-widget-name="Configurable List" style="width:100%;text-align:Left;overflow-x:auto" data-component="widget-field"><iframe data-client-id="533946093c1ad0c45d000070" title="Configurable List" frameBorder="0" scrolling="no" allowtransparency="true" allow="geolocation; microphone; camera; autoplay; encrypted-media; fullscreen" data-type="iframe" class="custom-field-frame" id="customFieldFrame_10" src="" style="max-width:px;border:none;width:100%;height:150px" data-width="" data-height="150"></iframe>
