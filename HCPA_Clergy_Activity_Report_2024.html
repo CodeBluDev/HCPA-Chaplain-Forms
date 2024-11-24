@@ -171,15 +171,15 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
 
 
 <script type="text/javascript">
+  
   document.addEventListener("DOMContentLoaded", function () {
-    console.log("DOM fully loaded and parsed");
     const totalCallOutsField = document.getElementById("input_27");
     const totalRideAlongsField = document.getElementById("input_28");
     const totalOtherEventsField = document.getElementById("input_29");
     const totalTimeField = document.getElementById("input_32");
 
     // Function to calculate the overall total and log changes
-    function updateTotalTime(mutation, fieldName) {
+    function updateTotalTime(fieldName) {
         const totalCallOuts = parseFloat(totalCallOutsField.value) || 0;
         const totalRideAlongs = parseFloat(totalRideAlongsField.value) || 0;
         const totalOtherEvents = parseFloat(totalOtherEventsField.value) || 0;
@@ -188,7 +188,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
         totalTimeField.value = totalTime.toFixed(2);
 
         // Log changes
-        console.log(`Mutation observed in: ${fieldName}`);
+        console.log(`Value changed in: ${fieldName}`);
         console.log(`Total Hours - Call Outs: ${totalCallOuts}`);
         console.log(`Total Hours - Ride Alongs: ${totalRideAlongs}`);
         console.log(`Total Hours - Other Events: ${totalOtherEvents}`);
@@ -199,11 +199,13 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
     function observeField(field, fieldName) {
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                updateTotalTime(mutation, fieldName);
+                if (mutation.type === "attributes" && mutation.attributeName === "value") {
+                    updateTotalTime(fieldName);
+                }
             });
         });
 
-        observer.observe(field, { attributes: true, childList: true, subtree: true });
+        observer.observe(field, { attributes: true, attributeFilter: ["value"] });
         console.log(`Started observing changes for: ${fieldName}`);
     }
 
@@ -212,7 +214,7 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
     observeField(totalRideAlongsField, "Total Hours - Ride Alongs");
     observeField(totalOtherEventsField, "Total Hours - Other Events");
 });
- 
+
 
 </script>
 
