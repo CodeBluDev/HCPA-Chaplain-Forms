@@ -184,14 +184,60 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
         mutations.forEach((mutation) => {
             if (mutation.type === "attributes") {
                 console.log(`Iframe attribute changed: ${mutation.attributeName}`);
+
                 if (mutation.attributeName === "title") {
-                    console.log(`New iframe title: ${iframe.getAttribute("title")}`);
+                    const newTitle = iframe.getAttribute("title");
+                    console.log(`New iframe title: ${newTitle}`);
+
+                    // Parse and calculate totals if data is embedded in the title
+                    const data = parseIframeTitle(newTitle);
+                    updateTotals(data);
                 }
             }
         });
     });
 
     observer.observe(iframe, { attributes: true });
+
+    // Helper function to parse title data
+    function parseIframeTitle(title) {
+        // Example: If the title is a JSON string
+        try {
+            return JSON.parse(title);
+        } catch (e) {
+            console.error("Failed to parse iframe title as JSON:", e);
+            return null;
+        }
+    }
+
+    // Function to update totals in the parent form
+    function updateTotals(data) {
+        if (!data) return;
+
+        // Update form fields (adjust selectors to match your form)
+        const totalCallOutsField = document.getElementById("input_27");
+        const totalRideAlongsField = document.getElementById("input_28");
+        const totalOtherEventsField = document.getElementById("input_29");
+        const totalTimeField = document.getElementById("input_32");
+
+        totalCallOutsField.value = data.callOuts || 0;
+        totalRideAlongsField.value = data.rideAlongs || 0;
+        totalOtherEventsField.value = data.otherEvents || 0;
+
+        // Calculate the total time
+        const totalTime =
+            (parseFloat(data.callOuts) || 0) +
+            (parseFloat(data.rideAlongs) || 0) +
+            (parseFloat(data.otherEvents) || 0);
+        totalTimeField.value = totalTime.toFixed(2);
+
+        console.log("Updated totals:", {
+            callOuts: data.callOuts,
+            rideAlongs: data.rideAlongs,
+            otherEvents: data.otherEvents,
+            totalTime,
+        });
+    }
 });
 
 
