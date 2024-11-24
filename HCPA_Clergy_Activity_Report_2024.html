@@ -26,6 +26,55 @@
 <link type="text/css" rel="stylesheet" href="https://cdn02.jotfor.ms/themes/CSS/5e6b428acc8c4e222d1beb91.css?v=3.3.58827"/>
 <link type="text/css" rel="stylesheet" href="https://cdn03.jotfor.ms/css/styles/payment/payment_styles.css?3.3.58827" />
 <link type="text/css" rel="stylesheet" href="https://cdn01.jotfor.ms/css/styles/payment/payment_feature.css?3.3.58827" />
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const callOutsFrame = document.getElementById("customFieldFrame_10");
+    const rideAlongFrame = document.getElementById("customFieldFrame_13");
+    const otherEventsFrame = document.getElementById("customFieldFrame_16");
+
+    const callOutsTotal = document.getElementById("input_27");
+    const rideAlongTotal = document.getElementById("input_28");
+    const otherEventsTotal = document.getElementById("input_29");
+
+    // Function to calculate totals
+    function calculateTotals(frame, totalField) {
+      try {
+        const iframeDocument = frame.contentDocument || frame.contentWindow.document;
+        const rows = iframeDocument.querySelectorAll(".configurable-list-row");
+        let totalHours = 0;
+
+        rows.forEach(row => {
+          const hoursInput = row.querySelector('input[type="number"]');
+          const hoursValue = parseFloat(hoursInput?.value) || 0;
+          totalHours += hoursValue;
+        });
+
+        totalField.value = totalHours.toFixed(2);
+      } catch (error) {
+        console.error("Error calculating totals:", error);
+      }
+    }
+
+    // Add event listeners for row changes
+    function addRowListeners(frame, totalField) {
+      frame.onload = function () {
+        const iframeDocument = frame.contentDocument || frame.contentWindow.document;
+        iframeDocument.addEventListener("input", () => calculateTotals(frame, totalField));
+        iframeDocument.addEventListener("change", () => calculateTotals(frame, totalField));
+      };
+    }
+
+    addRowListeners(callOutsFrame, callOutsTotal);
+    addRowListeners(rideAlongFrame, rideAlongTotal);
+    addRowListeners(otherEventsFrame, otherEventsTotal);
+  });
+</script>
+
+
+
 <style type="text/css" id="form-designer-style">
     /* Injected CSS Code */
 /*PREFERENCES STYLE*/
