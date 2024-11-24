@@ -171,35 +171,49 @@ JotForm.paymentExtrasOnTheFly([null,{"name":"heading","qid":"1","text":"HCPA Cle
 
 
 <script type="text/javascript">
-  document.addEventListener('DOMContentLoaded', function() {
-    console.log('Document has loaded');
-    // Your additional JavaScript code here
-    
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM fully loaded and parsed");
+    const totalCallOutsField = document.getElementById("input_27");
+    const totalRideAlongsField = document.getElementById("input_28");
+    const totalOtherEventsField = document.getElementById("input_29");
+    const totalTimeField = document.getElementById("input_32");
 
-      const totalCallOutsField = document.getElementById("input_27");
-      const totalRideAlongsField = document.getElementById("input_28");
-      const totalOtherEventsField = document.getElementById("input_29");
-      const totalTimeField = document.getElementById("input_32");
-  
-      // Function to calculate the overall total
-      function updateTotalTime() {
-          const totalCallOuts = parseFloat(totalCallOutsField.value) || 0;
-          const totalRideAlongs = parseFloat(totalRideAlongsField.value) || 0;
-          const totalOtherEvents = parseFloat(totalOtherEventsField.value) || 0;
-  
-          const totalTime = totalCallOuts + totalRideAlongs + totalOtherEvents;
-          totalTimeField.value = totalTime.toFixed(2);
-      }
-  
-      // Observe changes to the fields
-      const observer = new MutationObserver(updateTotalTime);
-  
-      observer.observe(totalCallOutsField, { attributes: true, childList: true, subtree: true });
-      observer.observe(totalRideAlongsField, { attributes: true, childList: true, subtree: true });
-      observer.observe(totalOtherEventsField, { attributes: true, childList: true, subtree: true });
+    // Function to calculate the overall total and log changes
+    function updateTotalTime(mutation, fieldName) {
+        const totalCallOuts = parseFloat(totalCallOutsField.value) || 0;
+        const totalRideAlongs = parseFloat(totalRideAlongsField.value) || 0;
+        const totalOtherEvents = parseFloat(totalOtherEventsField.value) || 0;
 
-  
-  });
+        const totalTime = totalCallOuts + totalRideAlongs + totalOtherEvents;
+        totalTimeField.value = totalTime.toFixed(2);
+
+        // Log changes
+        console.log(`Mutation observed in: ${fieldName}`);
+        console.log(`Total Hours - Call Outs: ${totalCallOuts}`);
+        console.log(`Total Hours - Ride Alongs: ${totalRideAlongs}`);
+        console.log(`Total Hours - Other Events: ${totalOtherEvents}`);
+        console.log(`Updated Total Time: ${totalTime}`);
+    }
+
+    // Create a MutationObserver for each field
+    function observeField(field, fieldName) {
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                updateTotalTime(mutation, fieldName);
+            });
+        });
+
+        observer.observe(field, { attributes: true, childList: true, subtree: true });
+        console.log(`Started observing changes for: ${fieldName}`);
+    }
+
+    // Start observing the fields
+    observeField(totalCallOutsField, "Total Hours - Call Outs");
+    observeField(totalRideAlongsField, "Total Hours - Ride Alongs");
+    observeField(totalOtherEventsField, "Total Hours - Other Events");
+});
+ 
+
 </script>
 
 
